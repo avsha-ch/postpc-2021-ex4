@@ -6,6 +6,8 @@ import android.util.Log;
 
 public class CalculateRootsService extends IntentService {
 
+  private static final int TIMEOUT = 20;
+
 
   public CalculateRootsService() {
     super("CalculateRootsService");
@@ -41,5 +43,33 @@ public class CalculateRootsService extends IntentService {
        for input "829851628752296034247307144300617649465159", after 20 seconds give up
 
      */
+    long root1 = 0;
+    long root2 = 0;
+    int i = 2;
+    Intent rootsIntent = new Intent();
+    while ((timeStartMs - System.currentTimeMillis() <= TIMEOUT * 1000)
+            && (i < Math.sqrt(numberToCalculateRootsFor))) {
+      if ((numberToCalculateRootsFor % i == 0) && (numberToCalculateRootsFor/i != i)) {
+        root1 = i;
+        root2 = numberToCalculateRootsFor / i;
+        rootsIntent.setAction("found_roots");
+        rootsIntent.putExtra("original_number", numberToCalculateRootsFor);
+        if (root1 != root2) {
+          rootsIntent.putExtra("root1", root1);
+          rootsIntent.putExtra("root2", root2);
+        }
+        else {
+          rootsIntent.putExtra("root1", 1);
+          rootsIntent.putExtra("root2", numberToCalculateRootsFor);
+        }
+        sendBroadcast(rootsIntent);
+        return;
+      }
+      i++;
+    }
+    rootsIntent.setAction("stopped_calculations");
+    rootsIntent.putExtra("original_number", numberToCalculateRootsFor);
+    rootsIntent.putExtra("time_until_give_up_seconds", timeStartMs - System.currentTimeMillis());
+    sendBroadcast(rootsIntent);
   }
 }
