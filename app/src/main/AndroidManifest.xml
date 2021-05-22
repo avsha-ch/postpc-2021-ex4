@@ -22,7 +22,10 @@
             </intent-filter>
         </activity>
 
-<!--        TODO create a new class extending Activity and register it here in an <activity> tag -->
+<!--        create a new class extending Activity and register it here in an <activity> tag -->
+        <activity android:name=".DisplayResultsActivity">
+
+        </activity>
 
     </application>
 

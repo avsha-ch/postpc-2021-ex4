@@ -23,7 +23,6 @@ public class CalculateRootsService extends IntentService {
       return;
     }
     /*
-    TODO:
      calculate the roots.
      check the time (using `System.currentTimeMillis()`) and stop calculations if can't find an answer after 20 seconds
      upon success (found a root, or found that the input number is prime):
@@ -43,25 +42,25 @@ public class CalculateRootsService extends IntentService {
        for input "829851628752296034247307144300617649465159", after 20 seconds give up
 
      */
-    long root1 = 0;
-    long root2 = 0;
     int i = 2;
     Intent rootsIntent = new Intent();
-    while ((timeStartMs - System.currentTimeMillis() <= TIMEOUT * 1000)
-            && (i < Math.sqrt(numberToCalculateRootsFor))) {
-      if ((numberToCalculateRootsFor % i == 0) && (numberToCalculateRootsFor/i != i)) {
-        root1 = i;
-        root2 = numberToCalculateRootsFor / i;
+    while (timeStartMs - System.currentTimeMillis() <= TIMEOUT * 1000){
+      long calcTimeInSecs = (timeStartMs - System.currentTimeMillis()) / 1000;
+      if (numberToCalculateRootsFor % i == 0) {
         rootsIntent.setAction("found_roots");
         rootsIntent.putExtra("original_number", numberToCalculateRootsFor);
-        if (root1 != root2) {
-          rootsIntent.putExtra("root1", root1);
-          rootsIntent.putExtra("root2", root2);
-        }
-        else {
-          rootsIntent.putExtra("root1", 1);
-          rootsIntent.putExtra("root2", numberToCalculateRootsFor);
-        }
+        rootsIntent.putExtra("root1", (long) i);
+        rootsIntent.putExtra("root2", (numberToCalculateRootsFor / i));
+        rootsIntent.putExtra("time_until_calculation_seconds", calcTimeInSecs);
+        sendBroadcast(rootsIntent);
+        return;
+      }
+      else if (Math.sqrt(numberToCalculateRootsFor) < i){
+        rootsIntent.setAction("found_roots");
+        rootsIntent.putExtra("original_number", numberToCalculateRootsFor);
+        rootsIntent.putExtra("root1", numberToCalculateRootsFor);
+        rootsIntent.putExtra("root2", 1L);
+        rootsIntent.putExtra("time_until_calculation_seconds", calcTimeInSecs);
         sendBroadcast(rootsIntent);
         return;
       }
