@@ -63,8 +63,24 @@ public class MainActivityTest extends TestCase {
     assertEquals(progressBar.getVisibility(), View.GONE);
   }
 
+  @Test
+  public void when_userIsEnteringBadInput_then_theButtonShouldBeDisabled(){
+    // create a MainActivity and let it think it's currently displayed on the screen
+    MainActivity mainActivity = Robolectric.buildActivity(MainActivity.class).create().visible().get();
 
-  // TODO: add 1 or 2 more unit tests to the activity. so your "writing tests" skill won't get rusty.
+    // find the edit-text and the button
+    EditText inputEditText = mainActivity.findViewById(R.id.editTextInputNumber);
+    Button button = mainActivity.findViewById(R.id.buttonCalculateRoots);
+
+    // test: insert input to the edit text and verify that the button is enabled
+    assertFalse(button.isEnabled());
+    inputEditText.setText("aa");
+    assertFalse(button.isEnabled());
+  }
+
+
+
+  // add 1 or 2 more unit tests to the activity. so your "writing tests" skill won't get rusty.
   //  possible flows to unit-test:
   //  - when activity launches, "progress" starts hidden
   //  - when inserting a good number and clicking the button, "progress" should be displayed
