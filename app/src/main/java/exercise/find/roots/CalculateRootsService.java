@@ -44,8 +44,8 @@ public class CalculateRootsService extends IntentService {
      */
     int i = 2;
     Intent rootsIntent = new Intent();
-    while (timeStartMs - System.currentTimeMillis() <= TIMEOUT * 1000){
-      long calcTimeInSecs = (timeStartMs - System.currentTimeMillis()) / 1000;
+    while (System.currentTimeMillis() - timeStartMs <= TIMEOUT * 1000){
+      long calcTimeInSecs = (System.currentTimeMillis() - timeStartMs) / 1000;
       if (numberToCalculateRootsFor % i == 0) {
         rootsIntent.setAction("found_roots");
         rootsIntent.putExtra("original_number", numberToCalculateRootsFor);
@@ -68,7 +68,7 @@ public class CalculateRootsService extends IntentService {
     }
     rootsIntent.setAction("stopped_calculations");
     rootsIntent.putExtra("original_number", numberToCalculateRootsFor);
-    rootsIntent.putExtra("time_until_give_up_seconds", timeStartMs - System.currentTimeMillis());
+    rootsIntent.putExtra("time_until_give_up_seconds", (System.currentTimeMillis() - timeStartMs) / 1000);
     sendBroadcast(rootsIntent);
   }
 }

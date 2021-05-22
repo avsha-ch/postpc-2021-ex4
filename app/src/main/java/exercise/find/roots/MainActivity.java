@@ -16,6 +16,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
   private BroadcastReceiver broadcastReceiverForSuccess = null;
@@ -117,18 +119,18 @@ public class MainActivity extends AppCompatActivity {
     broadcastReceiverForFailure = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent incomingIntent) {
-        if (incomingIntent == null || !incomingIntent.getAction().equals("calculation_timeout")) return;
+        if (incomingIntent == null || !incomingIntent.getAction().equals("stopped_calculations")) return;
 
         buttonCalculateRoots.setEnabled(true);
         editTextUserInput.setEnabled(true);
         editTextUserInput.setText(EMPTY_STRING);
         progressBar.setVisibility(View.GONE);
         long durationUntilTimeout = incomingIntent.getLongExtra(TIMEOUT_STRING, 0);
-        String toastString = String.format("calculation aborted after %o seconds", durationUntilTimeout);
+        String toastString = String.format(Locale.ENGLISH, "calculation aborted after %d seconds", durationUntilTimeout);
         Toast.makeText(context, toastString, Toast.LENGTH_SHORT).show();
       }
     };
-    registerReceiver(broadcastReceiverForFailure, new IntentFilter("calculation_timeout"));
+    registerReceiver(broadcastReceiverForFailure, new IntentFilter("stopped_calculations"));
   }
 
   @Override
